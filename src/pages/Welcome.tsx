@@ -1,5 +1,12 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  Dimensions
+} from 'react-native';
 
 import wateringImg from '../assets/watering.png'
 import colors from '../styles/colors';
@@ -10,10 +17,14 @@ export function Welcome() {
       <Text style={styles.title}>
         Gerencie {'\n'}
         suas plantas {'\n'}
-        de forma fácil 
+        de forma fácil
       </Text>
 
-      <Image style={styles.image} source={wateringImg}/>
+      <Image
+        style={styles.image}
+        source={wateringImg}
+        resizeMode='contain'
+      />
 
       <Text style={styles.subTitle}>
         Não esqueça mais de regar suas plantas.
@@ -22,7 +33,7 @@ export function Welcome() {
 
       <TouchableOpacity
         style={styles.button}
-        activeOpacity={0.7} 
+        activeOpacity={0.7}
       >
         <Text style={styles.buttonText}>
           {'>'}
@@ -36,7 +47,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-around'
   },
 
   title: {
@@ -48,8 +59,7 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 292,
-    height: 284
+    height: Dimensions.get('window').width * 0.7
   },
 
   subTitle: {
