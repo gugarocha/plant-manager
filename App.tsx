@@ -7,7 +7,7 @@ import {
   Jost_600SemiBold
 } from '@expo-google-fonts/jost';
 
-import { Confirmation } from './src/pages/Confirmation';
+import Routes from './src/routes';
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,7 +22,7 @@ export default function App() {
   return (
     <>
       <StatusBar backgroundColor='#FFF' barStyle='dark-content'/>
-      <Confirmation />
+      <Routes />
     </>
   );
 };
