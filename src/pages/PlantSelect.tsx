@@ -22,7 +22,7 @@ interface EnviromentsProps {
 };
 
 interface PlantsProps {
-  id: number;
+  id: string;
   name: string;
   about: string;
   water_tips: string;
@@ -123,13 +123,14 @@ export function PlantSelect() {
       <View>
         <FlatList
           data={enviroments}
+          keyExtractor={item => String(item.key)}
           renderItem={({ item }) => (
-            <EnviromentButton
-              title={item.title}
-              active={item.key === enviromentSelected}
-              onPress={() => handleEnviromentSelected(item.key)}
-            />
-          )}
+          <EnviromentButton
+            title={item.title}
+            active={item.key === enviromentSelected}
+            onPress={() => handleEnviromentSelected(item.key)}
+          />
+        )}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.enviromentList}
@@ -139,6 +140,7 @@ export function PlantSelect() {
       <View style={styles.plants}>
         <FlatList
           data={filteredPlants}
+          keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
             <PlantCardPrimary data={item} />
           )}
