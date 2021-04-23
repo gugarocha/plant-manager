@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
@@ -40,6 +41,29 @@ export function PlantSelect() {
   const [enviromentSelected, setEnviromentSelected] = useState('all');
   const [loading, setLoading] = useState(true);
 
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [loadedAll, setLoadedAll] = useState(false);
+
+  async function fetchPlants() {
+    const { data } = await api.get(`plants?_sort=name&_order=asc&_page=${page}&_limit=8`);
+
+    if (!data)
+      return setLoading(true);
+
+    if (page > 1) {
+      setPlants(oldValue => [...oldValue, ...data])
+      setFilteredPlants(oldValue => [...oldValue, ...data])
+    } else {
+      setPlants(data);
+      setFilteredPlants(data);
+    }
+
+    setLoading(false);
+    setLoadingMore(false);
+  };
+
+
   function handleEnviromentSelected(enviroment: string) {
     setEnviromentSelected(enviroment);
 
@@ -52,6 +76,15 @@ export function PlantSelect() {
     );
 
     setFilteredPlants(filtered);
+  };
+
+  function handleFetchMore(distance: number) {
+    if (distance < 1)
+      return;
+
+    setLoadingMore(true);
+    setPage(oldValue => oldValue + 1)
+    fetchPlants()
   };
 
   useEffect(() => {
@@ -68,14 +101,6 @@ export function PlantSelect() {
   }, []);
 
   useEffect(() => {
-    async function fetchPlants() {
-      const { data } = await api.get('plants?_sort=name&_order=asc');
-
-      setPlants(data);
-      setFilteredPlants(data);
-      setLoading(false);
-    };
-
     fetchPlants();
   }, []);
 
@@ -119,6 +144,15 @@ export function PlantSelect() {
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
+          onEndReachedThreshold={0.1}
+          onEndReached={({ distanceFromEnd }) =>
+            handleFetchMore(distanceFromEnd)
+          }
+          ListFooterComponent={
+            loadingMore
+              ? <ActivityIndicator color={colors.green_dark} />
+              : <></>
+          }
         />
       </View>
     </View>
