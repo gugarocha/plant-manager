@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -25,6 +26,9 @@ export function UserIdentification() {
   const navigation = useNavigation();
 
   function handleSubmit() {
+    if(!name)
+      return Alert.alert('Me diz como chamar você 😥')
+
     navigation.navigate('Confirmation');
   };
 
