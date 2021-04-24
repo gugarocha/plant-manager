@@ -6,6 +6,7 @@ import {
   Text,
   View
 } from 'react-native';
+import { useNavigation } from '@react-navigation/core';
 
 import { EnviromentButton } from '../components/EnviromentButton';
 import { Header } from '../components/Header';
@@ -43,7 +44,8 @@ export function PlantSelect() {
 
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [loadedAll, setLoadedAll] = useState(false);
+
+  const navigation = useNavigation();
 
   async function fetchPlants() {
     const { data } = await api.get(`plants?_sort=name&_order=asc&_page=${page}&_limit=8`);
@@ -76,6 +78,10 @@ export function PlantSelect() {
     );
 
     setFilteredPlants(filtered);
+  };
+
+  function handlePlantSelect(plant: PlantsProps) {
+    navigation.navigate('PlantSave', { plant });
   };
 
   function handleFetchMore(distance: number) {
@@ -125,12 +131,12 @@ export function PlantSelect() {
           data={enviroments}
           keyExtractor={item => String(item.key)}
           renderItem={({ item }) => (
-          <EnviromentButton
-            title={item.title}
-            active={item.key === enviromentSelected}
-            onPress={() => handleEnviromentSelected(item.key)}
-          />
-        )}
+            <EnviromentButton
+              title={item.title}
+              active={item.key === enviromentSelected}
+              onPress={() => handleEnviromentSelected(item.key)}
+            />
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.enviromentList}
@@ -142,7 +148,10 @@ export function PlantSelect() {
           data={filteredPlants}
           keyExtractor={item => String(item.id)}
           renderItem={({ item }) => (
-            <PlantCardPrimary data={item} />
+            <PlantCardPrimary
+              data={item}
+              onPress={() => handlePlantSelect(item)}
+            />
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
