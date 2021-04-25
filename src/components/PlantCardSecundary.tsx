@@ -1,6 +1,13 @@
+import { Feather } from '@expo/vector-icons';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SvgFromUri } from 'react-native-svg';
 
 import colors from '../styles/colors';
@@ -12,28 +19,45 @@ interface PlantProps extends RectButtonProps {
     photo: string;
     hour: string;
   };
+  handleRemove: () => void;
 };
 
-export const PlantCardSecundary = ({ data, ...rest }: PlantProps) => {
+export const PlantCardSecundary = ({ data, handleRemove, ...rest }: PlantProps) => {
   return (
-    <RectButton
-      style={styles.container}
-      {...rest}
+    <Swipeable
+      overshootRight={false}
+      renderRightActions={() => (
+        <Animated.View>
+          <View>
+            <RectButton
+              style={styles.removeButton}
+              onPress={handleRemove}
+            >
+              <Feather name='trash' size={32} color={colors.white} />
+            </RectButton>
+          </View>
+        </Animated.View>
+      )}
     >
-      <SvgFromUri uri={data.photo} width={50} height={50} />
-      <Text style={styles.title}>
-        {data.name}
-      </Text>
+      <RectButton
+        style={styles.container}
+        {...rest}
+      >
+        <SvgFromUri uri={data.photo} width={50} height={50} />
+        <Text style={styles.title}>
+          {data.name}
+        </Text>
 
-      <View style={styles.details}>
-        <Text style={styles.timeLabel}>
-          Regar às
-        </Text>
-        <Text style={styles.time}>
-          {data.hour}
-        </Text>
-      </View>
-    </RectButton>
+        <View style={styles.details}>
+          <Text style={styles.timeLabel}>
+            Regar às
+          </Text>
+          <Text style={styles.time}>
+            {data.hour}
+          </Text>
+        </View>
+      </RectButton>
+    </Swipeable>
   )
 };
 
@@ -72,5 +96,18 @@ const styles = StyleSheet.create({
     color: colors.body_dark,
     fontFamily: fonts.text,
     fontSize: 16
+  },
+
+  removeButton: {
+    position: 'relative',
+    right: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 85,
+    width: 100,
+    marginTop: 15,
+    paddingLeft: 15,
+    borderRadius: 20,
+    backgroundColor: colors.red
   }
 });
